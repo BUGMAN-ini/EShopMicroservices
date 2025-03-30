@@ -8,6 +8,7 @@ builder.Services.AddMediatR(config =>
 
 
 var app = builder.Build();
+
 app.MapCarter();
 
 

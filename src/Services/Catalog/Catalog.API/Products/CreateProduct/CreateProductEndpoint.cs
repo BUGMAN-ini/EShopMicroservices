@@ -13,7 +13,7 @@
 
                 var result = await sender.Send(command);
 
-                var response = result.Adapt<CreateProductResponse>();
+                var response = new CreateProductResponse(result.id);
 
                 return Results.Created($"/products/{response.id}", response);
             })
