@@ -1,0 +1,6 @@
+services:
+  catalogdb:
+    image: mssql
+
+volumes:
+  mssql_catalog:
