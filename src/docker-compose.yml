@@ -1,13 +1,6 @@
-version: "3.9"
 services:
   catalogdb:
     image: postgres
-    volumes:
-      - postgres_catalog:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1245
-      POSTGRES_DB: CatalogDb
 
 volumes:
   postgres_catalog:
