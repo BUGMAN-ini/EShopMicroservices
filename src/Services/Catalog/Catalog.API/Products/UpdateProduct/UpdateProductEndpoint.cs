@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Catalog.API.Products.UpdateProduct
 {
-    public record UpdateProductRequest(Guid id, string Name, List<string> Category, string Description, string ImageFile, decimal price);
+    public record UpdateProductRequest(Guid Id, string Name, List<string> Category, string Description, string ImageFile, decimal price);
     public record UpdateProductResponse(bool IsSuccess);
 
     public class UpdateProductEndpoint : ICarterModule
