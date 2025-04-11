@@ -7,6 +7,15 @@ namespace Catalog.API.Products.UpdateProduct
         : ICommand<UpdateProductResult>;
     public record UpdateProductResult(bool IsSuccess);
 
+    public class UpdateProductValidator : AbstractValidator<UpdateProductCommand>
+    {
+        public UpdateProductValidator()
+        {
+            RuleFor(x => x.Id).NotEmpty().WithMessage("Id is Neccesary");
+            RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required").Length(7, 30).WithMessage("Name should be between 7 and 30 symbols");
+        }
+    }
+
     internal class UpdateProductHandler(IDocumentSession session, ILogger<UpdateProductHandler> logger)
         : ICommandHandler<UpdateProductCommand, UpdateProductResult>
     {
