@@ -1,18 +1,14 @@
-﻿namespace Catalog.API.Exceptions
+﻿using BuildingBlocks.Exceptions;
+using MediatR.Wrappers;
+
+namespace Catalog.API.Exceptions
 {
     [Serializable]
-    internal class ProductNotFoundException : Exception
+    internal class ProductNotFoundException : NotFoundException
     {
-        public ProductNotFoundException() : base("Product Not Found")
+        public ProductNotFoundException(Guid id) : base("Product",id)
         {
         }
 
-        public ProductNotFoundException(string? message) : base(message)
-        {
-        }
-
-        public ProductNotFoundException(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
     }
 }
