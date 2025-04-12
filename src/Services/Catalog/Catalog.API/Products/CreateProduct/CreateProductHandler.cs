@@ -13,7 +13,6 @@ namespace Catalog.API.Products.CreateProduct
             RuleFor(x => x.Name).NotEmpty().WithMessage("Name Is Required");
             RuleFor(x => x.Category).NotEmpty().WithMessage("Category is Required");
             RuleFor(x => x.ImageFile).NotEmpty().WithMessage("ImageFile is Required");
-            RuleFor(x => x.price).GreaterThan(0).WithMessage("Price must be great than 0");
 
         }
     }
