@@ -25,32 +25,6 @@ var app = builder.Build();
 
 app.MapCarter();
 
-app.UseExceptionHandler( exceptionHandlerApp =>
-{
-    exceptionHandlerApp.Run(async context =>
-    {
-        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-        if (exception == null)
-        {
-            return;
-        }
-
-        var problemDetails = new ProblemDetails
-        {
-            Title = exception.Message,
-            Status = StatusCodes.Status500InternalServerError,
-            Detail = exception.StackTrace
-        };
-
-        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-        logger.LogError(exception, exception.Message);
-
-        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        context.Response.ContentType = "application/json";
-
-        await context.Response.WriteAsJsonAsync(problemDetails);
-    });
-});
 
 
 
