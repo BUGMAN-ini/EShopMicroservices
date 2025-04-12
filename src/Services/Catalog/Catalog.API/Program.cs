@@ -1,5 +1,8 @@
+using HealthChecks.UI.Client;
+
 var builder = WebApplication.CreateBuilder(args);
 var assembly = typeof(Program).Assembly;
+var connectionstring = builder.Configuration.GetConnectionString("Default");
 
 builder.Services.AddMediatR(config =>
 {
@@ -13,7 +16,7 @@ builder.Services.AddCarter();
 
 builder.Services.AddMarten(opts =>
 {
-    opts.Connection(builder.Configuration.GetConnectionString("Default"));
+    opts.Connection(connectionstring);
 
 }).UseLightweightSessions();
 if(builder.Environment.IsDevelopment())
@@ -23,12 +26,20 @@ if(builder.Environment.IsDevelopment())
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
+builder.Services.AddHealthChecks().AddNpgSql(connectionstring);
+
 
 var app = builder.Build();
 
 app.MapCarter();
 
 app.UseExceptionHandler(options => { });
+
+app.UseHealthChecks("/health",
+    new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
 
 
 

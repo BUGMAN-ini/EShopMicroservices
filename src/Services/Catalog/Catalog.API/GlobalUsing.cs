@@ -10,3 +10,4 @@ global using BuildingBlocks.Behaviors;
 global using BuildingBlocks.Exceptions.Handler;
 global using Marten.Schema;
 global using Catalog.API.Data;
+global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
