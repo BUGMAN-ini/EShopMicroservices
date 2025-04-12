@@ -18,7 +18,7 @@ namespace Catalog.API.Products.CreateProduct
         }
     }
 
-    internal class CreateProductHandler(IDocumentSession session, ILogger<CreateProductHandler> logger) 
+    internal class CreateProductHandler(IDocumentSession session) 
         : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
@@ -34,8 +34,6 @@ namespace Catalog.API.Products.CreateProduct
             //{
             //    throw new ValidationException(msg.FirstOrDefault());
             //}
-
-            logger.LogInformation("CreateProductHandler Fired");
 
             var product = new Product
             {
