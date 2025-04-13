@@ -18,7 +18,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Host=127.0.0.1;Database=CatalogDb;port=5432;Username=postgres;Password=1245;Include Error Detail=true"
+      - ConnectionStrings__Database=catalogdb=localhost;Database=CatalogDb;port=5432;Username=postgres;Password=1245;Include Error Detail=true"
     depends_on:
       - catalogdb
     ports:
