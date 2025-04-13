@@ -1,6 +1,4 @@
-﻿using JasperFx.CodeGeneration.Frames;
-
-namespace Catalog.API.Data
+﻿namespace Catalog.API.Data
 {
     public class CatalogInitialData : IInitialData
     {
