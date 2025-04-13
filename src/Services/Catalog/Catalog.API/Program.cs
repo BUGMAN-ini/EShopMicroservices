@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+
 var builder = WebApplication.CreateBuilder(args);
 var assembly = typeof(Program).Assembly;
 var connectionstring = builder.Configuration.GetConnectionString("Default");
