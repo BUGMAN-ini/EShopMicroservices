@@ -14,7 +14,7 @@
                 return Results.Ok(response);
             })
                 .WithName("GetBasket")
-                .Produces<GetBasketResponse>(StatusCodes.Status201Created)
+                .Produces<GetBasketResponse>(StatusCodes.Status200OK)
                 .ProducesProblem(StatusCodes.Status400BadRequest)
                 .WithSummary("Get Basket")
                 .WithDescription("Get Basket");
