@@ -1,6 +1,4 @@
-﻿using BuildingBlocks.Behaviors;
-
-namespace Basket.API.Basket.DeleteBasket
+﻿namespace Basket.API.Basket.DeleteBasket
 {
     public record DeleteBasketCommand(string userName) : ICommand<DeleteBasketResult>;
     public record DeleteBasketResult(bool IsSuccess);
@@ -16,7 +14,10 @@ namespace Basket.API.Basket.DeleteBasket
     {
         public async Task<DeleteBasketResult> Handle(DeleteBasketCommand command, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+
+
+
+            return new DeleteBasketResult(true);
         }
     }
 }
