@@ -4,7 +4,7 @@ using Basket.API.Basket.GetBasket;
 namespace Basket.API.Basket.StoreBasket
 {
     public record StoreBasketRequest(ShoppingCart cart);
-    public record StoreBasketResponse(string userName);
+    public record StoreBasketResponse(string UserName);
     public class StoreBasketEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
@@ -17,13 +17,13 @@ namespace Basket.API.Basket.StoreBasket
 
                 var response = result.Adapt<StoreBasketResponse>();
 
-                return Results.Created($"/basket/{response.userName}", response);
+                return Results.Created($"/basket/{response.UserName}", response);
             })
-                .WithName("PostBasket")
+                .WithName("CreateBasket")
                 .Produces<StoreBasketResponse>(StatusCodes.Status201Created)
                 .ProducesProblem(StatusCodes.Status400BadRequest)
-                .WithSummary("Add Basket")
-                .WithDescription("Add Basket");
+                .WithSummary("Create Basket")
+                .WithDescription("Create Basket");
         }
     }
 }
