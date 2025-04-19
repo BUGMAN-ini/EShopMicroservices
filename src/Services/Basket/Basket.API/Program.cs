@@ -1,7 +1,8 @@
-using BuildingBlocks.Behaviors;
-
 var builder = WebApplication.CreateBuilder(args);
 var assembly = typeof(Program).Assembly;
+var connectionstring = builder.Configuration.GetConnectionString("Default");
+
+
 builder.Services.AddCarter();
 builder.Services.AddMediatR(config =>
 {
@@ -9,6 +10,14 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
+
+builder.Services.AddMarten(opts =>
+{
+    opts.Connection(connectionstring);
+    opts.Schema.For<ShoppingCart>().Identity(x => x.UserName);
+
+}).UseLightweightSessions();
+
 // Add services to the container
 
 var app = builder.Build();
