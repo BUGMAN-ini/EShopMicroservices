@@ -18,6 +18,8 @@ builder.Services.AddMarten(opts =>
 
 }).UseLightweightSessions();
 
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+
 // Add services to the container
 
 var app = builder.Build();
