@@ -1,3 +1,5 @@
+using BuildingBlocks.Exceptions.Handler;
+
 var builder = WebApplication.CreateBuilder(args);
 var assembly = typeof(Program).Assembly;
 var connectionstring = builder.Configuration.GetConnectionString("Default");
@@ -19,13 +21,14 @@ builder.Services.AddMarten(opts =>
 }).UseLightweightSessions();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 // Add services to the container
 
 var app = builder.Build();
 
 app.MapCarter();
-
+app.UseExceptionHandler(opts => { });
 // Configure the HTTP request pipeline
 
 app.Run();
