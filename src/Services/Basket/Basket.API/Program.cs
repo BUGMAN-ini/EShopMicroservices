@@ -21,6 +21,7 @@ builder.Services.AddMarten(opts =>
 }).UseLightweightSessions();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddScoped<IBasketRepository, ChachedBasketRepository>();
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 // Add services to the container
