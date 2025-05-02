@@ -1,4 +1,4 @@
-using BuildingBlocks.Exceptions.Handler;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var assembly = typeof(Program).Assembly;
@@ -21,7 +21,17 @@ builder.Services.AddMarten(opts =>
 }).UseLightweightSessions();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
-builder.Services.AddScoped<IBasketRepository, ChachedBasketRepository>();
+builder.Services.Decorate<IBasketRepository, ChachedBasketRepository>();
+
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+});
+
+
+
+
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 // Add services to the container
