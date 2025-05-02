@@ -1,7 +1,4 @@
-﻿
-using Basket.API.Basket.GetBasket;
-
-namespace Basket.API.Basket.StoreBasket
+﻿namespace Basket.API.Basket.StoreBasket
 {
     public record StoreBasketRequest(ShoppingCart Cart);
     public record StoreBasketResponse(string UserName);
@@ -19,11 +16,11 @@ namespace Basket.API.Basket.StoreBasket
 
                 return Results.Created($"/basket/{response.UserName}", response);
             })
-                .WithName("CreateBasket")
+                .WithName("CreateProduct")
                 .Produces<StoreBasketResponse>(StatusCodes.Status201Created)
                 .ProducesProblem(StatusCodes.Status400BadRequest)
-                .WithSummary("Create Basket")
-                .WithDescription("Create Basket");
+                .WithSummary("Create Product")
+                .WithDescription("Create Product");
         }
     }
 }
