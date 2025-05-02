@@ -1,5 +1,3 @@
-
-
 var builder = WebApplication.CreateBuilder(args);
 var assembly = typeof(Program).Assembly;
 var connectionstring = builder.Configuration.GetConnectionString("Default");
@@ -33,6 +31,11 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddHealthChecks()
+    .AddNpgSql(connectionstring)
+    .AddRedis(builder.Configuration.GetConnectionString("Redis"));
+
+
 
 // Add services to the container
 
@@ -40,6 +43,11 @@ var app = builder.Build();
 
 app.MapCarter();
 app.UseExceptionHandler(opts => { });
+app.UseHealthChecks("/health",
+    new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
 // Configure the HTTP request pipeline
 
 app.Run();
