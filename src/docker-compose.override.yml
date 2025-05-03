@@ -36,12 +36,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=catalogdb=localhost;Database=CatalogDb;port=5432;Username=postgres;Password=1245;Include Error Detail=true"
+      - ConnectionStrings__Database=Server=catalogdb;Database=CatalogDb;port=5432;Username=postgres;Password=1245;Include Error Detail=true"
     depends_on:
       - catalogdb
     ports:
-      - "7000:8080"
-      - "7001:8081"
+      - "6000:8080"
+      - "6060:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
@@ -59,8 +59,8 @@ services:
       - basketdb
       - distributedcache
     ports:
-      - "8080"
-      - "8081"
+      - "6001:8080"
+      - "6061:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
