@@ -10,10 +10,16 @@ service DiscountProtoService{
 	rpc CreateDiscount (CreateDiscountRequest) returns (CouponModel);
 	rpc UpdateDiscount (UpdateDiscountRequest) returns (CouponModel);
 	rpc DeleteDiscount (DeleteDiscountRequest) returns (DeleteDiscountResponse);
+	rpc GetAllCoupons (GetAllCouponsRequest) returns (GetAllCouponsResponse);
 }
 
 message GetDiscountRequest{
 	string productName = 1;
+}
+
+message GetAllCouponsRequest{
+	int32 page = 1;
+	int32 pageSize = 10;
 }
 
 message CouponModel{
@@ -37,4 +43,8 @@ message DeleteDiscountRequest{
 
 message DeleteDiscountResponse{
 	bool success = 1;
+}
+
+message GetAllCouponsResponse {
+  repeated CouponModel coupons = 1;
 }

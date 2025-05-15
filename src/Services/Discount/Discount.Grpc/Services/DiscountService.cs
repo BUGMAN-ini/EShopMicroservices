@@ -9,6 +9,7 @@ namespace Discount.Grpc.Services
 {
     public class DiscountService(DiscountContext dbcontext, ILogger<DiscountService> logger) : DiscountProtoService.DiscountProtoServiceBase
     {
+
         public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
         {
             //TODO: GetDiscound from Database
