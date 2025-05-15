@@ -1,4 +1,10 @@
+using Discound.Grpc;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+
+// Application Services
 var assembly = typeof(Program).Assembly;
 var connectionstring = builder.Configuration.GetConnectionString("Default");
 
@@ -11,6 +17,7 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
+// Data Services
 builder.Services.AddMarten(opts =>
 {
     opts.Connection(connectionstring);
@@ -27,9 +34,16 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
 });
 
+//Grpc Services
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
+});
 
 
 
+
+// Cross Cutting Services
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddHealthChecks()
     .AddNpgSql(connectionstring)
