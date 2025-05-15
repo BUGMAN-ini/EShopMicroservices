@@ -9,6 +9,19 @@ namespace Discount.Grpc.Services
 {
     public class DiscountService(DiscountContext dbcontext, ILogger<DiscountService> logger) : DiscountProtoService.DiscountProtoServiceBase
     {
+        public override async Task<GetAllCouponsResponse> GetAllCoupons(GetAllCouponsRequest request, ServerCallContext context)
+        {
+            var coupons = await dbcontext.Coupons.ToListAsync();
+
+            List<CouponModel> couponModels = new();
+            foreach (var coupon in coupons)
+            {
+                var couponmodel = coupon.Adapt<CouponModel>();
+                couponModels.Add(couponmodel);
+            }
+
+            return new GetAllCouponsResponse { Coupons = { couponModels } };
+        }
 
         public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
         {
