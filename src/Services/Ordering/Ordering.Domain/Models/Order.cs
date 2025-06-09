@@ -1,12 +1,4 @@
-﻿using Ordering.Domain.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ordering.Domain.Models
+﻿namespace Ordering.Domain.Models
 {
     public class Order : Aggregate<Guid>
     {
@@ -18,7 +10,7 @@ namespace Ordering.Domain.Models
         public Address BillingAddress { get; private set; } = default!;
         public Payment Payment { get; private set; } = default!;
         public OrderStatus Status { get; private set; } = OrderStatus.Pending;
-        public decimal TotalPric
+        public decimal TotalPrice
         {
             get => _orderItems.Sum(x => x.Price * x.Quantity);
             private set { } // private setter to prevent external modification
