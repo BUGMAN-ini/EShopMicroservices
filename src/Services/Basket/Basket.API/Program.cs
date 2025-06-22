@@ -2,8 +2,6 @@ using Discound.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 // Application Services
 var assembly = typeof(Program).Assembly;
 var connectionstring = builder.Configuration.GetConnectionString("Default");

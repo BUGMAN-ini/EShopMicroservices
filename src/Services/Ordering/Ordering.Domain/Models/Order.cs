@@ -16,5 +16,56 @@
             get => _orderItems.Sum(x => x.Price * x.Quantity);
             private set { } // private setter to prevent external modification
         }
+
+        public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment)
+        {
+            ArgumentNullException.ThrowIfNull(customerId);
+            ArgumentNullException.ThrowIfNull(orderName);
+            ArgumentNullException.ThrowIfNull(shippingAddress);
+            ArgumentNullException.ThrowIfNull(billingAddress);
+            ArgumentNullException.ThrowIfNull(payment);
+            var order = new Order
+            {
+                Id = id,
+                CustomerId = customerId,
+                OrderName = orderName,
+                ShippingAddress = shippingAddress,
+                BillingAddress = billingAddress,
+                Payment = payment
+            };
+            order.AddDomainEvent(new OrderCreatedDomainEvent(order));
+            return order;
+        }
+
+        public void Update(OrderName orderName,Address shippingAddress, Address billingAddress, Payment payment, OrderStatus orderstatus)
+        {
+            OrderName = orderName;
+            ShippingAddress = shippingAddress;
+            BillingAddress = billingAddress;
+            Payment = payment;
+            Status = orderstatus;
+
+            AddDomainEvent(new OrderUpdatedDomainEvent(this));
+        }
+
+        public void Add(ProductId productId, int quantity, decimal price)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(price);
+            var orderItem = new OrderItem(Id, productId, quantity, price);
+            _orderItems.Add(orderItem);
+            AddDomainEvent(new OrderItemAddedDomainEvent(this, orderItem));
+        }
+
+        public void REmove(ProductId productId)
+        {
+            var orderItem = _orderItems.FirstOrDefault(x => x.ProductId == productId);
+            if (orderItem is not null)
+            {
+                _orderItems.Remove(orderItem);
+            }
+            
+            AddDomainEvent(new OrderItemRemovedDomainEvent(this, orderItem));
+        }
     }
 }
