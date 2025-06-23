@@ -8,13 +8,13 @@
         public string CVV { get; } = default!;
         public int PaymentMethod { get; } = default!; // Assuming this is an enum or int representing the payment method
 
-        private Payment(string cardName, string cardNumber, string expiration, string cvv, int paymentMethod)
+        private Payment(string CardName, string CardNumber, string Expiration, string CVV, int PaymentMethod)
         {
-            CardName = cardName;
-            CardNumber = cardNumber;
-            Expiration = expiration;
-            CVV = cvv;
-            PaymentMethod = paymentMethod;
+            this.CardName = CardName;
+            this.CardNumber = CardNumber;
+            this.Expiration = Expiration;
+            this.CVV = CVV;
+            this.PaymentMethod = PaymentMethod;
         }
         public static Payment Of(string cardName, string cardNumber, string expiration, string cvv, int paymentMethod)
         {

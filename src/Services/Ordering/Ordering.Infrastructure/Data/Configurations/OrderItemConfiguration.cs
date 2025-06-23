@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Ordering.Domain.Models;
 using Ordering.Domain.ValueObject;
 
@@ -15,7 +14,7 @@ namespace Ordering.Infrastructure.Data.Configurations
             builder.Property(oi => oi.Id)
                 .HasConversion(id => id.Value, value => OrderItemId.Of(value));
 
-            builder.HasOne<Property>()
+            builder.HasOne<Product>()
                 .WithMany()
                 .HasForeignKey(oi => oi.ProductId);
 

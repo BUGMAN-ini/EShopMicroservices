@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ordering.Domain.Models;
+using Ordering.Domain.ValueObject;
 using System.Reflection;
 
 namespace Ordering.Infrastructure.Data
@@ -14,6 +15,7 @@ namespace Ordering.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
             base.OnModelCreating(modelBuilder);
         }
     }
