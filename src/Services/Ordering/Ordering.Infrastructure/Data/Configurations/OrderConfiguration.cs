@@ -15,7 +15,6 @@ namespace Ordering.Infrastructure.Data.Configurations
             builder.Property(o => o.Id)
                 .HasConversion(id => id.Value, value => OrderId.Of(value));
 
-            // Specify navigation property correctly
             builder.HasOne<Customer>()
                 .WithMany()
                 .HasForeignKey(o => o.CustomerId)
