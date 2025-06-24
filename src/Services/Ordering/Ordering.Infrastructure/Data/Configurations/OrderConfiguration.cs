@@ -24,7 +24,8 @@ namespace Ordering.Infrastructure.Data.Configurations
                 .WithOne()
                 .HasForeignKey(oi => oi.OrderId);
 
-            builder.ComplexProperty(o => o.OrderName, nameBuilder =>
+            builder.ComplexProperty(
+                o => o.OrderName, nameBuilder =>
             {
                 nameBuilder.Property(n => n.Value)
                     .HasColumnName(nameof(Order.OrderName))
@@ -32,7 +33,8 @@ namespace Ordering.Infrastructure.Data.Configurations
                     .IsRequired();
             });
 
-            builder.ComplexProperty(o => o.ShippingAddress, addressBuilder =>
+            builder.ComplexProperty(
+                o => o.ShippingAddress, addressBuilder =>
             {
                 addressBuilder.Property(a => a.FirstName).HasMaxLength(50).IsRequired();
                 addressBuilder.Property(a => a.LastName).HasMaxLength(50).IsRequired();
