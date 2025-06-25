@@ -30,6 +30,15 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+
+  orderdb:
+    container_name: orderdb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Gadavirie12345%%
+    restart: always
+    ports:
+      - "1433:1433"
       
   catalog.api:
     environment:
