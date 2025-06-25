@@ -15,17 +15,12 @@ namespace Ordering.Domain.Models
         public OrderStatus Status { get; private set; } = OrderStatus.Pending;
         public decimal TotalPrice
         {
-            get => _orderItems.Sum(x => x.Price * x.Quantity);
-            private set { } // private setter to prevent external modification
+            get => OrderItems.Sum(x => x.Price * x.Quantity);
+            private set { }
         }
 
         public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment)
         {
-            ArgumentNullException.ThrowIfNull(customerId);
-            ArgumentNullException.ThrowIfNull(orderName);
-            ArgumentNullException.ThrowIfNull(shippingAddress);
-            ArgumentNullException.ThrowIfNull(billingAddress);
-            ArgumentNullException.ThrowIfNull(payment);
             var order = new Order
             {
                 Id = id,
@@ -33,19 +28,22 @@ namespace Ordering.Domain.Models
                 OrderName = orderName,
                 ShippingAddress = shippingAddress,
                 BillingAddress = billingAddress,
-                Payment = payment
+                Payment = payment,
+                Status = OrderStatus.Pending
             };
+
             order.AddDomainEvent(new OrderCreatedEvent(order));
+
             return order;
         }
 
-        public void Update(OrderName orderName,Address shippingAddress, Address billingAddress, Payment payment, OrderStatus orderstatus)
+        public void Update(OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment, OrderStatus status)
         {
             OrderName = orderName;
             ShippingAddress = shippingAddress;
             BillingAddress = billingAddress;
             Payment = payment;
-            Status = orderstatus;
+            Status = status;
 
             AddDomainEvent(new OrderUpdatedEvent(this));
         }
@@ -54,9 +52,9 @@ namespace Ordering.Domain.Models
         {
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(price);
+
             var orderItem = new OrderItem(Id, productId, quantity, price);
             _orderItems.Add(orderItem);
-            AddDomainEvent(new OrderItemAddedDomainEvent(this, orderItem));
         }
 
         public void Remove(ProductId productId)
@@ -66,8 +64,6 @@ namespace Ordering.Domain.Models
             {
                 _orderItems.Remove(orderItem);
             }
-            
-            AddDomainEvent(new OrderItemRemovedDomainEvent(this, orderItem));
         }
     }
 }

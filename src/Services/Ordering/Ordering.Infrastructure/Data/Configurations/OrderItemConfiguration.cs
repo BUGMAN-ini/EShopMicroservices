@@ -11,14 +11,16 @@ namespace Ordering.Infrastructure.Data.Configurations
         {
             builder.HasKey(oi => oi.Id);
 
-            builder.Property(oi => oi.Id)
-                .HasConversion(id => id.Value, value => OrderItemId.Of(value));
+            builder.Property(oi => oi.Id).HasConversion(
+                                       orderItemId => orderItemId.Value,
+                                       dbId => OrderItemId.Of(dbId));
 
             builder.HasOne<Product>()
                 .WithMany()
                 .HasForeignKey(oi => oi.ProductId);
 
             builder.Property(oi => oi.Quantity).IsRequired();
+
             builder.Property(oi => oi.Price).IsRequired();
         }
     }

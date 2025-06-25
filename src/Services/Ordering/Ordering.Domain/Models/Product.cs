@@ -14,7 +14,7 @@ namespace Ordering.Domain.Models
         public static Product Create(ProductId id, string name, decimal price)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(name);
-            ArgumentOutOfRangeException.ThrowIfLessThan(price, 0);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(price);
             var product = new Product
             {
                 Id = id,
