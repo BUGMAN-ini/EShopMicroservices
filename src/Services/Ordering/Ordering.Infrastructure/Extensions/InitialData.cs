@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Ordering.Infrastructure.Extensions
 {
-    internal class InitialData
+    public class InitialData
     {
         public static IEnumerable<Customer> Customers =>
         new List<Customer>
