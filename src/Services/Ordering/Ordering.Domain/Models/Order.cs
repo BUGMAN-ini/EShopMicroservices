@@ -56,7 +56,6 @@ namespace Ordering.Domain.Models
             var orderItem = new OrderItem(Id, productId, quantity, price);
             _orderItems.Add(orderItem);
         }
-
         public void Remove(ProductId productId)
         {
             var orderItem = _orderItems.FirstOrDefault(x => x.ProductId == productId);
