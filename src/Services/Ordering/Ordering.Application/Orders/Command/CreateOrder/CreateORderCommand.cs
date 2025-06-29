@@ -10,22 +10,18 @@ using System.Windows.Input;
 
 namespace Ordering.Application.Orders.Command.CreateOrder
 {
-    public record CreateOrderResult(Guid OrderId);
-    public record CreateOrderCommand(OrderDto order) : ICommand<CreateOrderResult>;
+    public record CreateOrderCommand(OrderDto Order)
+    : ICommand<CreateOrderResult>;
+
+    public record CreateOrderResult(Guid Id);
 
     public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
     {
         public CreateOrderCommandValidator()
         {
-            RuleFor(x => x.order.OrderName)
-                .NotNull()
-                .WithMessage("Order cannot be null.");
-            RuleFor(x => x.order.CustomerId)
-                .NotEmpty()
-                .WithMessage("CustomerId is required.");
-            RuleFor(x => x.order.OrderItems)
-                .NotEmpty()
-                .WithMessage("OrderName is required.");
+            RuleFor(x => x.Order.OrderName).NotEmpty().WithMessage("Name is required");
+            RuleFor(x => x.Order.CustomerId).NotNull().WithMessage("CustomerId is required");
+            RuleFor(x => x.Order.OrderItems).NotEmpty().WithMessage("OrderItems should not be empty");
         }
     }
 
