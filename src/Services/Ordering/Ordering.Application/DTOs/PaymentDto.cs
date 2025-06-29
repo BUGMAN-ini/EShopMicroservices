@@ -1,11 +1,4 @@
 ﻿namespace Ordering.Application.DTOs
 {
-    public record PaymentDto(
-        Guid Id,
-        Guid OrderId,
-        string CardNumber,
-        string CardHolderName,
-        DateTime ExpirationDate,
-        string Cvv,
-        decimal Amount);
+    public record PaymentDto(string CardName, string CardNumber, string Expiration, string Cvv, int PaymentMethod);
 }
