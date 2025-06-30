@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ordering.Application.Orders.Query.GetOrdersByCustomer
+﻿namespace Ordering.Application.Orders.Query.GetOrdersByCustomer
 {
     public class GetOrderByCustomerHandler(IApplicationDbContext dbcontext) 
         : IQueryHandler<GetOrderByCustomerQuery, GetOrdersByCustomerResult>
     {
-        public Task<GetOrdersByCustomerResult> Handle(GetOrderByCustomerQuery request, CancellationToken cancellationToken)
+        public async Task<GetOrdersByCustomerResult> Handle(GetOrderByCustomerQuery query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var orders = await dbcontext.Orders
+                .Include(o => o.OrderItems)
+                .AsNoTracking()
+                .Where(o => o.CustomerId == CustomerId.Of(query.CustomerId))
+                .OrderBy(o => o.OrderName.Value)
+                .ToListAsync(cancellationToken);
+
+            return new GetOrdersByCustomerResult(orders.ToOrderDtos());
         }
     }
 }

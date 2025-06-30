@@ -7,3 +7,5 @@ global using BuildingBlocks.Behaviors;
 global using Ordering.Domain.Events;
 global using MediatR;
 global using Microsoft.Extensions.Logging;
+global using Microsoft.EntityFrameworkCore;
+global using Ordering.Application.Extensions;
