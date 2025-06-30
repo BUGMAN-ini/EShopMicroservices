@@ -4,3 +4,6 @@ global using Ordering.Application.DTOs;
 global using Ordering.Domain.Models;
 global using Ordering.Domain.ValueObject;
 global using BuildingBlocks.Behaviors;
+global using Ordering.Domain.Events;
+global using MediatR;
+global using Microsoft.Extensions.Logging;
