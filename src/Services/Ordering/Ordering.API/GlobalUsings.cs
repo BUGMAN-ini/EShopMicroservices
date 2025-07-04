@@ -1,0 +1,9 @@
+﻿global using Carter;
+global using MediatR;
+global using Ordering.Application.DTOs;
+global using Ordering.Application.Orders.Query.GetOrdersByName;
+global using Ordering.Domain.ValueObject;
+global using Mapster;
+global using Ordering.Application.Orders.Query.GetOrdersByCustomer;
+global using BuildingBlocks.Pagination;
+global using Ordering.Application.DTOs;
