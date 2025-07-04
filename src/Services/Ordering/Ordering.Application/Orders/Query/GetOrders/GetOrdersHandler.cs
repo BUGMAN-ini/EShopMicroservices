@@ -32,7 +32,7 @@ namespace Ordering.Application.Orders.Query.GetOrders
                     pageIndex,
                     pageSize,
                     totalCount,
-                    orders.ToOrderDtos()));
+                    orders.ToOrderDtoList()));
         }
     }
 }

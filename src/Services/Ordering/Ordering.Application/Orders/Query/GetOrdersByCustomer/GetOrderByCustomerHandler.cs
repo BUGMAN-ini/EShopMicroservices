@@ -12,7 +12,7 @@
                 .OrderBy(o => o.OrderName.Value)
                 .ToListAsync(cancellationToken);
 
-            return new GetOrdersByCustomerResult(orders.ToOrderDtos());
+            return new GetOrdersByCustomerResult(orders.ToOrderDtoList());
         }
     }
 }
