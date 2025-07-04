@@ -7,3 +7,7 @@ global using Mapster;
 global using Ordering.Application.Orders.Query.GetOrdersByCustomer;
 global using BuildingBlocks.Pagination;
 global using Ordering.Application.DTOs;
+global using Ordering.API;
+global using Ordering.Application;
+global using Ordering.Infrastructure;
+global using Ordering.Infrastructure.Extensions;
