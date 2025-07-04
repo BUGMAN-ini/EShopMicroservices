@@ -1,6 +1,7 @@
 ﻿using Carter;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.DTOs;
 using Ordering.Application.Orders.Command.CreateOrder;
 
@@ -12,7 +13,7 @@ namespace Ordering.API.Endpoints
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/orders", async (CreateOrderRequest request, ISender sender) =>
+            app.MapPost("/orders", async ([FromBody] CreateOrderRequest request, [FromServices] ISender sender) =>
             {
                 var command = request.Adapt<CreateOrderCommand>();
                 var result = await sender.Send(command);
