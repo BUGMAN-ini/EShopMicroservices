@@ -8,8 +8,8 @@ namespace BuildingBlocks.Messaging.Events
 {
     public record IntegrationEvent
     {
-        public Guid Id { get; init; } = Guid.NewGuid();
-        public DateTime OccuredOn => DateTime.Now;
+        public Guid Id => Guid.NewGuid();
+        public DateTime OccurredOn => DateTime.Now;
         public string EventType => GetType().AssemblyQualifiedName;
     }
 }

@@ -1,4 +1,6 @@
 using Discound.Grpc;
+using BuildingBlocks.Messaging.MassTransit;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +47,7 @@ builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
 });
 
 
-
+builder.Services.AddMessageBroker(builder.Configuration);
 
 // Cross Cutting Services
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
