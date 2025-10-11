@@ -8,10 +8,10 @@
         public string Description { get; set; } = default!;
         public string ImageFile { get; set; } = default!;
         public decimal Price { get; set; }
-
     }
 
-    public record GetProductsRequest(int? PageNumber = 1, int? PageSize = 10);
+    //wrapper classes
     public record GetProductsResponse(IEnumerable<ProductModel> Products);
+    public record GetProductByCategoryResponse(IEnumerable<ProductModel> Products);
     public record GetProductByIdResponse(ProductModel Product);
 }
