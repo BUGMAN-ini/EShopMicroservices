@@ -1,0 +1,217 @@
+services:  
+ catalogdb:  
+   image: postgres  
+
+ basketdb:  
+   image: postgres  
+
+ distributedcache:  
+   image: redis  
+
+ orderdb:  
+   image: mcr.microsoft.com/mssql/server
+
+ messagebroker:  
+   image: rabbitmq:3-management
+
+ catalog.api:  
+   image: ${DOCKER_REGISTRY-}catalogapi  
+   build:  
+     context: .  
+     dockerfile: Services/Catalog/Catalog.API/Dockerfile  
+
+ basket.api:
+   image: ${DOCKER_REGISTRY-}basketapi
+   build:
+     context: .
+     dockerfile: Services/Basket/Basket.API/Dockerfile
+
+ discount.grpc:
+   image: ${DOCKER_REGISTRY-}discountgrpc
+   build:
+     context: Services/Discount/Discount.Grpc
+     dockerfile: Dockerfile
+
+ ordering.api:
+   image: ${DOCKER_REGISTRY-}orderingapi
+   build:
+     context: .
+     dockerfile: Services/Ordering/Ordering.API/Dockerfile
+
+ yarpapigateway:
+   image: ${DOCKER_REGISTRY-}yarpapigateway
+   build:
+     context: .
+     dockerfile: ApiGateways/YarpApiGateway/Dockerfile
+
+ shopping.web:
+   image: ${DOCKER_REGISTRY-}shoppingweb
+   build:
+     context: .
+     dockerfile: WebApps/Shopping.Web/Dockerfile
+
+volumes:  
+ postgres_catalog:  
+ postgres_basket:  
+ redis_data:
+
+
+ services:
+  catalogdb:
+    container_name: catalogdb
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=1245
+        - POSTGRES_DB=CatalogDb
+    restart: always
+    ports:
+        - "5432:5432"
+    volumes:
+      - postgres_catalog:/var/lib/postgresql/data/ 
+
+  basketdb:
+    container_name: basketdb
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=1245
+        - POSTGRES_DB=BasketDb
+    restart: always
+    ports:
+        - "5433:5432"
+    volumes:
+      - postgres_basket:/var/lib/postgresql/data/ 
+
+  distributedcache:
+    container_name: distributedcache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  orderdb:
+    container_name: orderdb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Gadavirie12345%%
+    restart: always
+    ports:
+      - "1433:1433"
+      
+  messagebroker:
+    container_name: messagebroker
+    hostname: eccomerce-mq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    
+
+  catalog.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=catalogdb;Database=CatalogDb;port=5432;Username=postgres;Password=1245;Include Error Detail=true"
+    depends_on:
+      - catalogdb
+    ports:
+      - "6000:8080"
+      - "6060:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=localhost;Database=BasketDb;port=5433;Username=postgres;Password=1245;Include Error Detail=true
+      - ConnectionStrings__Redis=distributedcache:6379
+      - GrpcSettings__DiscountUrl=https://discount.grpc:8081 
+    depends_on:
+      - basketdb
+      - distributedcache
+      - discount.grpc
+    ports:
+      - "6001:8080"
+      - "6061:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  discount.grpc:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Data Source=catalogdb
+    ports:
+      - "6002:8080"
+      - "6062:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  ordering.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - "6003:8080"
+      - "6063:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  yarpapigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    depends_on:
+      - catalog.api
+      - basket.api
+      - discount.grpc
+      - ordering.api
+    ports:
+      - "6004:8080"
+      - "6064:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  shopping.web:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ApiSettings__GatewayAddress=http://yarpapigateway:8080
+    depends_on:
+      - yarpapigateway
+    ports:
+      - "6005:8080"
+      - "6065:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+
+
+
+
+
+

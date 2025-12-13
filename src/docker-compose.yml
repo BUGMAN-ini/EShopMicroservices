@@ -54,11 +54,3 @@ volumes:
  postgres_catalog:  
  postgres_basket:  
  redis_data:
-
-
-
-
-
-
-
-
