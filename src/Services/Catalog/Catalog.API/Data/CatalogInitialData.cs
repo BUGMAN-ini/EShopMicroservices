@@ -18,7 +18,7 @@
             new Product
             {
                 Id = new Guid("01961a87-384a-4e05-bba2-b40305184bbd"),
-                Name = "Galogre",
+                Name = "simona",
                 Category = ["c1", "c2"],
                 Description = "Description Product A",
                 ImageFile = "ImageFile Product A",

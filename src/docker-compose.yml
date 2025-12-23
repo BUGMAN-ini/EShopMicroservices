@@ -1,9 +1,9 @@
 services:  
  catalogdb:  
-   image: postgres  
+   image: postgres:16
 
  basketdb:  
-   image: postgres  
+   image: postgres:16  
 
  distributedcache:  
    image: redis  

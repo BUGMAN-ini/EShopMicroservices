@@ -2,30 +2,27 @@ services:
   catalogdb:
     container_name: catalogdb
     environment:
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=1245
-        - POSTGRES_DB=CatalogDb
-    restart: always
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1245"
+      POSTGRES_DB: CatalogDb
     ports:
-        - "5432:5432"
+      - "5432:5432"
     volumes:
-      - postgres_catalog:/var/lib/postgresql/data/ 
+      - postgres_catalog:/var/lib/postgresql
 
   basketdb:
     container_name: basketdb
     environment:
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=1245
-        - POSTGRES_DB=BasketDb
-    restart: always
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1245"
+      POSTGRES_DB: BasketDb
     ports:
-        - "5433:5432"
+      - "5433:5432"
     volumes:
-      - postgres_basket:/var/lib/postgresql/data/ 
+      - postgres_basket:/var/lib/postgresql
 
   distributedcache:
     container_name: distributedcache
-    restart: always
     ports:
       - "6379:6379"
     volumes:
@@ -34,32 +31,30 @@ services:
   orderdb:
     container_name: orderdb
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Gadavirie12345%%
-    restart: always
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Gadavirie12345%%"
     ports:
       - "1433:1433"
-      
+
   messagebroker:
     container_name: messagebroker
-    hostname: eccomerce-mq
+    hostname: ecommerce-mq   # fixed typo
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    restart: always
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     ports:
       - "5672:5672"
       - "15672:15672"
-    
 
+  # ---- Apps ----
   catalog.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Server=catalogdb;Database=CatalogDb;port=5432;Username=postgres;Password=1245;Include Error Detail=true"
-    depends_on:
-      - catalogdb
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+      # set both keys so whichever your app reads, it works
+      ConnectionStrings__Database: "Host=catalogdb;Database=CatalogDb;Port=5432;Username=postgres;Password=1245;Include Error Detail=true"
+      ConnectionStrings__DefaultConnection: "Host=catalogdb;Database=CatalogDb;Port=5432;Username=postgres;Password=1245;Include Error Detail=true"
     ports:
       - "6000:8080"
       - "6060:8081"
@@ -71,16 +66,13 @@ services:
 
   basket.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Server=localhost;Database=BasketDb;port=5433;Username=postgres;Password=1245;Include Error Detail=true
-      - ConnectionStrings__Redis=distributedcache:6379
-      - GrpcSettings__DiscountUrl=https://discount.grpc:8081 
-    depends_on:
-      - basketdb
-      - distributedcache
-      - discount.grpc
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+      ConnectionStrings__Database: "Host=basketdb;Database=BasketDb;Port=5432;Username=postgres;Password=1245;Include Error Detail=true"
+      ConnectionStrings__DefaultConnection: "Host=basketdb;Database=BasketDb;Port=5432;Username=postgres;Password=1245;Include Error Detail=true"
+      ConnectionStrings__Redis: "distributedcache:6379"
+      GrpcSettings__DiscountUrl: "https://discount.grpc:8081"
     ports:
       - "6001:8080"
       - "6061:8081"
@@ -92,10 +84,11 @@ services:
 
   discount.grpc:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Data Source=catalogdb
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+      ConnectionStrings__Database: "Host=catalogdb;Database=CatalogDb;Port=5432;Username=postgres;Password=1245;Include Error Detail=true"
+      ConnectionStrings__DefaultConnection: "Host=catalogdb;Database=CatalogDb;Port=5432;Username=postgres;Password=1245;Include Error Detail=true"
     ports:
       - "6002:8080"
       - "6062:8081"
@@ -105,9 +98,9 @@ services:
 
   ordering.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
     ports:
       - "6003:8080"
       - "6063:8081"
@@ -119,14 +112,9 @@ services:
 
   yarpapigateway:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    depends_on:
-      - catalog.api
-      - basket.api
-      - discount.grpc
-      - ordering.api
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
     ports:
       - "6004:8080"
       - "6064:8081"
@@ -138,12 +126,10 @@ services:
 
   shopping.web:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-      - ApiSettings__GatewayAddress=http://yarpapigateway:8080
-    depends_on:
-      - yarpapigateway
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+      ApiSettings__GatewayAddress: "http://yarpapigateway:8080"
     ports:
       - "6005:8080"
       - "6065:8081"
@@ -151,3 +137,7 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
+volumes:
+  postgres_catalog:
+  postgres_basket:
+  redis_data:
