@@ -38,7 +38,7 @@ services:
 
   messagebroker:
     container_name: messagebroker
-    hostname: ecommerce-mq   # fixed typo
+    hostname: ecommerce-mq
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -46,13 +46,11 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  # ---- Apps ----
   catalog.api:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: "8080"
       ASPNETCORE_HTTPS_PORTS: "8081"
-      # set both keys so whichever your app reads, it works
       ConnectionStrings__Database: "Host=catalogdb;Database=CatalogDb;Port=5432;Username=postgres;Password=1245;Include Error Detail=true"
       ConnectionStrings__DefaultConnection: "Host=catalogdb;Database=CatalogDb;Port=5432;Username=postgres;Password=1245;Include Error Detail=true"
     ports:
